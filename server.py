@@ -17,9 +17,10 @@ nicknames = []
 
 
 # 1.Broadcasting Method
-def broadcast(message):
+def broadcast(message, sender):
     for client in clients:
-        client.send(message)
+        if nicknames[clients.index(sender)] != client:
+            client.send(message)
 
 
 # 2.Receiving Messages from client then broadcasting
@@ -43,7 +44,7 @@ def handle(client):
                 else:
                     client.send('Command Refused!'.encode('ascii'))
             else:
-                broadcast(message)  # As soon as message received, broadcast it.
+                broadcast(message, client)  # As soon as message received, broadcast it.
 
         except socket.error:
             if client in clients:
