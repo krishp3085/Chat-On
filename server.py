@@ -7,6 +7,7 @@ host = "10.0.5.169"
 port = 5555  # Choose any random port which is not so common (like 80)
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 # Bind the server to IP Address
 server.bind((host, port))
 # Start Listening Mode
@@ -17,9 +18,13 @@ nicknames = []
 
 
 # 1.Broadcasting Method
-def broadcast(message, sender):
+def broadcast(message, sender='pass'):
     for client in clients:
-        if nicknames[clients.index(sender)] != client:
+        try:
+            if nicknames[clients.index(client)] == nicknames[clients.index(sender)]:
+                continue
+            client.send(message)
+        except:
             client.send(message)
 
 
